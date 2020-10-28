@@ -1,15 +1,54 @@
 #!/bin/bash
-# kernel build script by geiti94 v0.1 (made for s10e/s10/s10/s10 5g/n10/n10+/n10+ 5g sources)
+# kernel build script by geiti94 & Live0verfl0w v0.1 (made for s10e/s10/s10/s10 5g/n10/n10+/n10+ 5g sources)
+
+echo "------------------------------------------------------"
+echo "---             MazeKernel-build-script            ---"
+echo "------------------------------------------------------"
 
 export MODEL=$1
 export VARIANT=eur
 export ARCH=arm64
 export BUILD_CROSS_COMPILE=$(pwd)/toolchains/aarch64-linux-android-4.9/bin/aarch64-linux-android-
-export BUILD_JOB_NUMBER=12
+CORES=$(nproc)
+export BUILD_JOB_NUMBER=${CORES}
+export USE_CCACHE=1
+export CCACHE_DIR=~/.ccache
 
 RDIR=$(pwd)
 OUTDIR=$RDIR/arch/arm64/boot
 INCDIR=$RDIR/include
+
+read -p "Type version number > " vr
+export VERSION=$vr
+if [ "$vr" = "" -o "$vr" = "exit" ]; then
+     echo ""
+     echo "No version selected!"
+     echo "Exiting now!"
+     echo ""
+     exit 0
+else
+     echo ""
+     echo "<${VERSION}> version number has been set!"
+     echo ""
+fi;
+
+read -p "Clean source (y/n) > " yn
+if [ "$yn" = "Y" -o "$yn" = "y" ]; then
+     echo "Cleaning Source!"
+     export CLEAN=yes
+else
+     echo "Not cleaning source!"
+     export CLEAN=no
+fi
+
+if [ "${CLEAN}" == "yes" ]; then
+	echo "Executing make clean & make mrproper!";
+	git reset;
+	git checkout .;
+	git clean -fdx;
+  elif [ "${CLEAN}" == "no" ]; then
+	echo "Initiating Dirty build!";
+	fi;
 
 case $MODEL in
 beyond2lte)
