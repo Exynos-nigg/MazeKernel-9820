@@ -1,11 +1,12 @@
 #!/bin/bash
-# kernel build script by geiti94 & Live0verfl0w v0.1 (made for s10e/s10/s10/s10 5g/n10/n10+/n10+ 5g sources)
+# Kernel build script made coded originally by geiti94 & modified by Live0verfl0w@github
 
 echo "------------------------------------------------------"
 echo "---             MazeKernel-build-script            ---"
 echo "------------------------------------------------------"
 
 export MODEL=$1
+VERSION_DATE=$(date +'%Y%m%d-%H%M')
 export VARIANT=eur
 export ARCH=arm64
 export BUILD_CROSS_COMPILE=$(pwd)/toolchains/aarch64-linux-android-4.9/bin/aarch64-linux-android-
@@ -49,6 +50,8 @@ if [ "${CLEAN}" == "yes" ]; then
   elif [ "${CLEAN}" == "no" ]; then
 	echo "Initiating Dirty build!";
 	fi;
+	
+export LOCALVERSION=-MazeKernel-${VERSION}-${VERSION_DATE}
 
 case $MODEL in
 beyond2lte)
